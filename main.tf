@@ -20,3 +20,8 @@ resource "azurerm_resource_group" "example1" {
   name     = "test-rg"
   location = "West Europe"
 }
+
+resource "azurerm_resource_group" "demo-rg" {
+  name     = "demo-rg"
+  location = "West Europe"
+}
