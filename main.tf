@@ -21,6 +21,11 @@ resource "azurerm_resource_group" "example1" {
   location = "West Europe"
 }
 
+resource "azurerm_resource_group" "abhilash-block" {
+  name     = "abhilash-rg"
+    location = "West Europe"
+}
+
 resource "azurerm_resource_group" "demo-rg" {
   name     = "demo-rg"
   location = "West Europe"
