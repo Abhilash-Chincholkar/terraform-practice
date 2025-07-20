@@ -20,3 +20,8 @@ resource "azurerm_resource_group" "example1" {
   name     = "test-rg"
   location = "West Europe"
 }
+
+resource "azurerm_resource_group" "abhilash-block" {
+  name     = "abhilash-rg"
+  location = "West Europe"
+}
