@@ -2,33 +2,17 @@ terraform {
   required_providers {
     azurerm = {
       source = "hashicorp/azurerm"
-      version = "4.8.0"
+      version = "4.37.0"
     }
   }
 }
 
 provider "azurerm" {
-  # Configuration options
 features {}
-subscription_id = ""
+subscription_id = "c64cf66f-900c-4cad-b6cd-ee68a9839e8a"
 }
 
 resource "azurerm_resource_group" "example" {
   name     = "example"
-  location = "West Europe"
-}
-
-resource "azurerm_resource_group" "example1" {
-  name     = "test-rg"
-  location = "West Europe"
-}
-
-resource "azurerm_resource_group" "abhilash-block" {
-  name     = "abhilash-rg"
-    location = "West Europe"
-}
-
-resource "azurerm_resource_group" "demo-rg" {
-  name     = "demo-rg"
   location = "West Europe"
 }
