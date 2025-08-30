@@ -2,12 +2,13 @@ name: "Dhondhu Maharaj"
 on:
   push:
     branches:
-      - 'main'
+      - main
       - 'feature/**'
+
 jobs:
-  DhondhuJob
+  DhondhuJob:
     name: DhondhuMaharaj
-    runs-on: GitHubActionRunner
+    runs-on: ubuntu-latest
     steps:
       - name: DhondhuSteps
         run: echo Dhondhu Maharaj
