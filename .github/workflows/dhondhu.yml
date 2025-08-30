@@ -1,0 +1,13 @@
+name: "Dhondhu Maharaj"
+on:
+  push:
+    branches:
+      - 'main'
+      - 'feature/**'
+jobs:
+  DhondhuJob
+    name: DhondhuMaharaj
+    runs-on: GitHubActionRunner
+    steps:
+      - name: DhondhuSteps
+        run: echo Dhondhu Maharaj
