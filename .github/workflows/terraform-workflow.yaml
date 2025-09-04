@@ -1,0 +1,31 @@
+name: "Infra Workflow"
+on: workflow_dispatch
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  terraform-job:
+    name: my-terraform-job
+    runs-on: Runner
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5.0.0
+      - name: Install Terraform
+        uses: little-core-labs/install-terraform@v2.0.0
+        with:
+          version: 1.13.0
+      - name: Azure Login
+        uses: Azure/login@v2.3.0
+        with:
+          # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
+          client-id: c7135aa6-5c0c-4b33-a148-10aa1572b218
+          tenant-id: de80a58f-1610-4908-a1a7-862be272a38c
+          subscription-id: 0f48ce1f-16d2-42ba-8b4f-0bef1a58b563
+      
+                
+
+          
+    
+      
+    
+    
