@@ -1,9 +1,5 @@
 name: "Dhondhu Maharaj"
-on:
-  push:
-    branches:
-      - main
-      - 'feature/**'
+on: workflow_dispatch
 
 jobs:
   DhondhuJob:
