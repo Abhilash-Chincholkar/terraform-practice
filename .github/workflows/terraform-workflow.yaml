@@ -1,6 +1,9 @@
 name: Terraform Workflow
 on: workflow_dispatch
 
+permissions:
+  id-token: write  
+  contents: read    
 jobs:
   terraform:
     runs-on: Runner
