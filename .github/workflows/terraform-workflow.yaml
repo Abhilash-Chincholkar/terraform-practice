@@ -2,8 +2,9 @@ name: Terraform Workflow
 on: workflow_dispatch
 
 permissions:
-  id-token: write  
-  contents: read    
+  id-token: write   # required for OIDC
+  contents: read    # required for checkout
+
 jobs:
   terraform:
     runs-on: Runner
@@ -24,18 +25,24 @@ jobs:
           terraform_version: 1.13.0
 
       - name: Terraform Init
-        run: terraform init
-        working-directory: .
+        run: terraform init -input=false -no-color
 
       - name: Terraform Validate
-        run: terraform validate
-        working-directory: .
+        run: terraform validate -no-color
 
       - name: Terraform Plan
-        run: terraform plan -out=tfplan
-        working-directory: .
+        id: plan
+        run: |
+          terraform plan -input=false -no-color -out=tfplan -detailed-exitcode || exit_code=$?
+          if [ -z "$exit_code" ]; then
+            exit_code=$?
+          fi
+          echo "plan_exit_code=$exit_code" >> $GITHUB_OUTPUT
+
+      - name: Show Plan
+        if: steps.plan.outputs.plan_exit_code == '2'
+        run: terraform show -no-color tfplan
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve tfplan
-        working-directory: .
-
+        if: steps.plan.outputs.plan_exit_code == '2'
+        run: terraform apply -input=false -no-color -auto-approve tfplan
