@@ -1,47 +1,37 @@
-name: Terraform Workflow (Windows)
+name: Terraform Workflow
+on: workflow_dispatch
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
+permissions:
+  id-token: write   # required for OIDC
+  contents: read    # required for checkout
 
 jobs:
   terraform:
-    runs-on: self-hosted
-    defaults:
-      run:
-        shell: pwsh
-
+    runs-on: Runner
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.5.7
+          terraform_version: 1.13.0
 
       - name: Terraform Init
-        run: terraform init -input=false -no-color
+        run: terraform init
+
+      - name: Terraform Validate
+        run: terraform validate
 
       - name: Terraform Plan
-        id: plan
-        run: |
-          terraform plan -input=false -no-color -out=tfplan -detailed-exitcode
-          $exit_code = $LASTEXITCODE
-          Write-Host "Terraform plan exit code: $exit_code"
-          "exit_code=$exit_code" | Out-File -FilePath $env:GITHUB_ENV -Append
-          exit 0  # don’t fail here, handle with conditions
+        run: terraform plan -out=tfplan
 
       - name: Terraform Apply
-        if: env.exit_code == '2'
-        run: terraform apply -input=false -auto-approve tfplan
-
-      - name: No Changes Detected
-        if: env.exit_code == '0'
-        run: echo "No changes detected, skipping apply."
-
-      - name: Terraform Plan Failed
-        if: env.exit_code == '1'
-        run: exit 1
+        run: terraform apply -auto-approve tfplan
