@@ -3,7 +3,7 @@ on: workflow_dispatch
 
 jobs:
   terraform:
-    runs-on: runner
+    runs-on: Runner
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
