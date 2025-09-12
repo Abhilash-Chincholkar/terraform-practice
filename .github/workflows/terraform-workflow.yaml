@@ -7,7 +7,7 @@ permissions:
 
 jobs:
   terraform:
-    runs-on: Runner
+    runs-on: Runner   # your self-hosted Windows runner
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -26,23 +26,27 @@ jobs:
 
       - name: Terraform Init
         run: terraform init -input=false -no-color
+        shell: pwsh
 
       - name: Terraform Validate
         run: terraform validate -no-color
+        shell: pwsh
 
       - name: Terraform Plan
         id: plan
+        shell: pwsh
         run: |
-          terraform plan -input=false -no-color -out=tfplan -detailed-exitcode || exit_code=$?
-          if [ -z "$exit_code" ]; then
-            exit_code=$?
-          fi
-          echo "plan_exit_code=$exit_code" >> $GITHUB_OUTPUT
+          terraform plan -input=false -no-color -out=tfplan -detailed-exitcode
+          $exit_code = $LASTEXITCODE
+          echo "plan_exit_code=$exit_code" >> $env:GITHUB_OUTPUT
+          exit $exit_code
 
       - name: Show Plan
         if: steps.plan.outputs.plan_exit_code == '2'
         run: terraform show -no-color tfplan
+        shell: pwsh
 
       - name: Terraform Apply
         if: steps.plan.outputs.plan_exit_code == '2'
         run: terraform apply -input=false -no-color -auto-approve tfplan
+        shell: pwsh
